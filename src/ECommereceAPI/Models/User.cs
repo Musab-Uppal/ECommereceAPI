@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-namespace ECommerceAPI.Models
+namespace ECommereceAPI.Models
 {
     public class User
     {

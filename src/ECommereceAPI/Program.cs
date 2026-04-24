@@ -1,5 +1,9 @@
-using ECommerceAPI.Data;
 using Microsoft.EntityFrameworkCore;
+using ECommereceAPI.Data;
+using ECommereceAPI.Repositories.Interfaces;
+using ECommereceAPI.Repositories.Implementation;
+using ECommereceAPI.Services.Interfaces;    
+using ECommereceAPI.Services.Implementation;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
@@ -9,11 +13,17 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Add Swagger for API documentation
+// Register Repositories (Dependency Injection)
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+
+// Register Services (Dependency Injection)
+builder.Services.AddScoped<IProductService, ProductService>();
+
+// Add Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Add CORS (optional, for frontend communication)
+// Add CORS for frontend communication
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
@@ -26,6 +36,13 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+// Seed the database with initial data
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    SeedData.Initialize(services);
+}
 
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
