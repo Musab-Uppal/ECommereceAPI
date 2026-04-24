@@ -1,0 +1,133 @@
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio cache/options directory
+.vs/
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# Rider
+.idea/
+*.sln.iml
+*.sln.iml.user
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Local History for Visual Studio
+.localhistory/
+
+# BeatPulse healthcheck temp database
+healthchecksdb
+
+# NuGet Packages
+*.nupkg
+*.snupkg
+*.nuget.props
+*.nuget.targets
+.nuget/
+packages/
+!packages/build/
+*.ncrunchproject
+*.ncrunchsolution
+
+# Entity Framework
+*.db
+*.db-shm
+*.db-wal
+Migrations/
+
+# Application Insights telemetry
+ApplicationInsights.config
+.ApplicationInsights/
+
+# Local env files
+.env
+.env.local
+.env.*.local
+appsettings.Development.json
+
+# OS specific
+.DS_Store
+Thumbs.db
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+
+# Testing
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+
+# Rider-specific
+*.sln.iml
+
+# User secrets
+secrets.json
+user-secrets/
+
+# IDE settings
+.editorconfig.local
+
+# Build folder
+build/
+dist/
+
+# Database files (local development)
+*.mdf
+*.ldf
+*.ndf
+
+# Azure
+.publishsettings
+*.azurewebsites.net
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+
+# Visual Studio temporary files
+[Tt]emp/
+[Tt]mp/
+
+# macOS
+.AppleDouble
+.LSOverride
+
+# Windows
+$RECYCLE.BIN/
+Desktop.ini
+
+# Node modules (if using npm/yarn for frontend)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Compiled Python files (if using Python tools)
+__pycache__/
+*.py[cod]
+*$py.class
