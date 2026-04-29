@@ -1,12 +1,14 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
+
 using ECommereceAPI.Data;
 using ECommereceAPI.Repositories.Implementation;
 using ECommereceAPI.Repositories.Interfaces;
-using ECommereceAPI.Services.Interfaces;
 using ECommereceAPI.Services.Implementation;
+using ECommereceAPI.Services.Interfaces;
 using ECommereceAPI.Settings;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+// using Microsoft.OpenApi; // removed - avoid referencing unavailable OpenAPI model types
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,12 +51,25 @@ builder.Services.AddAuthentication("Bearer")
             ValidateLifetime = true,
             ClockSkew = TimeSpan.Zero
         };
+
+        // For Swagger testing - allow token in Authorization header
+        options.Events = new Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerEvents
+        {
+            OnAuthenticationFailed = context =>
+            {
+                if (context.Exception is SecurityTokenExpiredException)
+                {
+                    context.Response.Headers.Add("Token-Expired", "true");
+                }
+                return Task.CompletedTask;
+            }
+        };
     });
 
 // Add Authorization
 builder.Services.AddAuthorization();
 
-// Add Swagger/OpenAPI
+// Add Swagger/OpenAPI with JWT support
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -76,21 +91,68 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    SeedData.Initialize(services);
+    try
+    {
+        SeedData.Initialize(services);
+    }
+    catch (Exception ex)
+    {
+        // Log seeding errors but do not stop the app from starting
+        Console.WriteLine("Error while seeding the database: " + ex.Message);
+        Console.WriteLine(ex);
+    }
 }
 
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    // Show detailed exceptions during development
+    app.UseDeveloperExceptionPage();
 }
+
+// Serve static files (for swagger custom JS)
+app.UseStaticFiles();
+
+// Catch exceptions during Swagger document generation and return stack trace for easier debugging
+app.Use(async (context, next) =>
+{
+    try
+    {
+        await next();
+    }
+    catch (Exception ex)
+    {
+        // Log to console
+        Console.WriteLine(ex);
+
+        if (context.Request.Path.StartsWithSegments("/swagger"))
+        {
+            context.Response.StatusCode = 500;
+            context.Response.ContentType = "text/plain";
+            await context.Response.WriteAsync(ex.ToString());
+            return;
+        }
+
+        throw;
+    }
+});
+
+app.UseSwagger();
+
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "Ecommerce API v1");
+    // expose Swagger UI at /api/swagger/index.html so it's reachable at that URL
+    options.RoutePrefix = "api/swagger";
+    // inject custom JS (if present) to allow setting Bearer token from the UI
+    options.InjectJavascript("/swagger-swagger-ui-bearer.js");
+});
 
 app.UseHttpsRedirection();
 
 app.UseCors("AllowAll");
 
-// Add authentication middleware
+// Add authentication middleware BEFORE authorization
 app.UseAuthentication();
 app.UseAuthorization();
 
