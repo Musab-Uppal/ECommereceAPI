@@ -11,10 +11,12 @@ namespace ECommerce.Services.Implementation
     public class AuthService : IAuthService
     {
         private readonly ILogger<AuthService> _logger;
+        private readonly JwtSettings _jwtSettings;
 
-        public AuthService(ILogger<AuthService> logger)
+        public AuthService(ILogger<AuthService> logger, JwtSettings jwtSettings)
         {
             _logger = logger;
+            _jwtSettings = jwtSettings;
         }
 
         /// <summary>
@@ -83,7 +85,7 @@ namespace ECommerce.Services.Implementation
                     issuer: _jwtSettings.Issuer,
                     audience: _jwtSettings.Audience,
                     claims: claims,
-                    expires: DateTime.UtcNow.AddMinutes(_jwtSettings.ExpirationMinutes),
+                    expires: DateTime.UtcNow.AddMinutes(_jwtSettings.ExpiryMinutes),
                     signingCredentials: signingCredentials
                 );
 
@@ -114,7 +116,7 @@ namespace ECommerce.Services.Implementation
                 }
 
                 var tokenHandler = new JwtSecurityTokenHandler();
-                var secretKey = Encoding.UTF8.GetBytes(JwtSettings.SecretKey);
+                var secretKey = Encoding.UTF8.GetBytes(_jwtSettings.SecretKey);
 
                 var validationParameters = new TokenValidationParameters
                 {
@@ -157,8 +159,5 @@ namespace ECommerce.Services.Implementation
                 return (false, 0, null, null);
             }
         }
-    }
-}
-
     }
 }

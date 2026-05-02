@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using ECommerce.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ECommerce.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
@@ -28,7 +30,7 @@ namespace ECommerce.Controllers
             try
             {
                 var products = await _productService.GetAllProductsAsync(pageNumber, pageSize);
-                
+
                 if (products == null || !products.Any())
                 {
                     return NotFound("No products found");
@@ -116,6 +118,7 @@ namespace ECommerce.Controllers
         /// <param name="createProductDto">Product details</param>
         /// <returns>Created product</returns>
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ProductServiceDto>> CreateProduct([FromBody] CreateProductDto createProductDto)
         {
             try
@@ -148,6 +151,7 @@ namespace ECommerce.Controllers
         /// <param name="updateProductDto">Updated product details</param>
         /// <returns>Updated product</returns>
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ProductServiceDto>> UpdateProduct(int id, [FromBody] UpdateProductDto updateProductDto)
         {
             try
@@ -184,6 +188,7 @@ namespace ECommerce.Controllers
         /// <param name="id">Product ID</param>
         /// <returns>Success message</returns>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteProduct(int id)
         {
             try

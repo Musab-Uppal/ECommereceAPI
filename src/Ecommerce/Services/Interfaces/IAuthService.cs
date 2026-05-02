@@ -11,6 +11,11 @@ namespace ECommerce.Services.Interfaces
         /// Verify password against hash
         /// </summary>
         bool VerifyPassword(string password, string hash);
+
+        /// <summary>
+        /// Generate JWT token for authenticated user
+        /// </summary>
+        string GenerateJwtToken(int userId, string email, string role);
     }
 
     // Response DTOs
@@ -18,6 +23,7 @@ namespace ECommerce.Services.Interfaces
     {
         public bool Success { get; set; }
         public string Message { get; set; }
+        public string Token { get; set; }
         public UserAuthDto User { get; set; }
     }
 

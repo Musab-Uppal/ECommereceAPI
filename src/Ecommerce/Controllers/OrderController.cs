@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ECommerce.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ECommerce.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class OrderController : ControllerBase
     {
@@ -62,6 +64,7 @@ namespace ECommerce.Controllers
         /// GET /api/order?pageNumber=1&pageSize=10
         /// </summary>
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<OrderServiceDto>>> GetAllOrders(int pageNumber = 1, int pageSize = 10)
         {
             try
@@ -159,6 +162,7 @@ namespace ECommerce.Controllers
         /// Valid transitions: Pending → Shipped → Delivered
         /// </summary>
         [HttpPut("{id}/status")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<OrderServiceDto>> UpdateOrderStatus(int id, [FromBody] UpdateOrderStatusDto updateStatusDto)
         {
             try
@@ -235,6 +239,7 @@ namespace ECommerce.Controllers
         /// GET /api/order/stats/revenue
         /// </summary>
         [HttpGet("stats/revenue")]
+        [Authorize(Roles ="Admin")]
         public async Task<ActionResult<RevenueStatsDto>> GetRevenueStats()
         {
             try

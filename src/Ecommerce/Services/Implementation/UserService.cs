@@ -121,12 +121,16 @@ namespace ECommerce.Services.Implementation
                     };
                 }
 
+                // Generate JWT token
+                var token = _authService.GenerateJwtToken(user.UserId, user.Email, user.Role);
+
                 _logger.LogInformation($"User logged in: {user.Email}");
 
                 return new AuthResponse
                 {
                     Success = true,
                     Message = "Login successful",
+                    Token = token,
                     User = new UserAuthDto
                     {
                         UserId = user.UserId,

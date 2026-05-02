@@ -1,4 +1,5 @@
 ﻿using ECommerce.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerce.Controllers
@@ -181,6 +182,7 @@ namespace ECommerce.Controllers
         /// GET /api/user?pageNumber=1&pageSize=10
         /// </summary>
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<UserProfileDto>>> GetAllUsers(int pageNumber = 1, int pageSize = 10)
         {
             try
@@ -297,6 +299,7 @@ namespace ECommerce.Controllers
         /// Body: { "newRole": "Admin" }
         /// </summary>
         [HttpPut("{id}/role")]
+        [Authorize(Roles ="Admin")]
         public async Task<ActionResult<UserProfileDto>> ChangeUserRole(int id, [FromBody] ChangeRoleDto changeRoleDto)
         {
             try
