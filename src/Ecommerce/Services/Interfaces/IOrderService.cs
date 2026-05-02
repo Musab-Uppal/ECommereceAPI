@@ -62,7 +62,5 @@ namespace ECommerce.Services.Interfaces
     public class RevenueStatsDto
     {
         public decimal TotalRevenue { get; set; }
-        public int TotalOrders { get; set; }
-        public decimal AverageOrderValue { get; set; }
     }
 }
