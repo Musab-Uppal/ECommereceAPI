@@ -1,0 +1,27 @@
+<div class="min-h-screen py-10" style="background: var(--bg)">
+  <div class="max-w-2xl mx-auto px-4 md:px-8">
+    <h1 class="text-2xl font-semibold mb-8">Complete Payment</h1>
+
+    @if (error) {
+      <div class="bg-red-50 border border-red-200 text-red-600 p-4 rounded-lg mb-6">
+        {{ error }}
+      </div>
+    }
+
+    @if (clientSecret) {
+      <div class="card p-6">
+        <ngx-stripe-elements [stripe]="stripeService" [elementsOptions]="elementsOptions">
+          <ngx-stripe-payment [clientSecret]="clientSecret"></ngx-stripe-payment>
+        </ngx-stripe-elements>
+
+        <button (click)="pay()" [disabled]="isProcessing" class="btn-primary w-full !py-3 mt-6 disabled:opacity-50">
+          @if (isProcessing) { Processing... } @else { Pay now }
+        </button>
+      </div>
+    } @else {
+      @if (!error) {
+        <div class="text-center py-20 text-gray-400">Loading payment details...</div>
+      }
+    }
+  </div>
+</div>

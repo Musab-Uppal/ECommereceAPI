@@ -1,0 +1,62 @@
+<div class="min-h-screen flex items-center justify-center px-4 py-12" style="background: var(--bg)">
+  <div class="w-full max-w-sm">
+    <!-- Brand -->
+    <div class="text-center mb-8">
+      <a routerLink="/" class="text-2xl font-bold tracking-tight text-gray-900">Hop Shop</a>
+      <p class="text-sm text-gray-400 mt-1">Create your account</p>
+    </div>
+
+    <div class="card p-8">
+      <form (ngSubmit)="submit()" class="space-y-4">
+        <div *ngIf="error" class="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-lg">
+          {{ error }}
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-gray-600 mb-1.5" for="firstName">First name</label>
+          <input id="firstName" type="text" name="firstName" required [(ngModel)]="form.firstName" placeholder="Jane" class="field-input" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-gray-600 mb-1.5" for="lastName">Last name</label>
+          <input id="lastName" type="text" name="lastName" required [(ngModel)]="form.lastName" placeholder="Doe" class="field-input" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-gray-600 mb-1.5" for="email">Email</label>
+          <input id="email" type="email" name="email" required [(ngModel)]="form.email" placeholder="you@example.com" class="field-input" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-gray-600 mb-1.5" for="phone">Phone</label>
+          <input id="phone" type="tel" name="phone" required [(ngModel)]="form.phone" placeholder="+1 555 000 0000" class="field-input" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-gray-600 mb-1.5" for="address">Address</label>
+          <textarea id="address" name="address" required [(ngModel)]="form.address" placeholder="Street, city, country" rows="2" class="field-input resize-none"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-gray-600 mb-1.5" for="password">Password</label>
+          <input id="password" type="password" name="password" required minlength="6" [(ngModel)]="form.password" placeholder="Min. 6 characters" class="field-input" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-gray-600 mb-1.5" for="confirmPassword">Confirm password</label>
+          <input id="confirmPassword" type="password" name="confirmPassword" required minlength="6" [(ngModel)]="form.confirmPassword" placeholder="Re-enter password" class="field-input" />
+        </div>
+
+        <button type="submit" [disabled]="loading" class="btn-primary w-full !py-2.5 mt-2">
+          <ng-container *ngIf="loading; else btnText">Creating account…</ng-container>
+          <ng-template #btnText>Create account</ng-template>
+        </button>
+      </form>
+
+      <p class="text-center text-sm text-gray-400 mt-5">
+        Already have an account? 
+        <a routerLink="/login" class="text-gray-700 font-medium hover:text-gray-900">Sign in</a>
+      </p>
+    </div>
+  </div>
+</div>

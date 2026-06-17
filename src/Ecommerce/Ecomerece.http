@@ -1,0 +1,6 @@
+@Ecomerece_HostAddress = http://localhost:5124
+
+GET {{Ecomerece_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

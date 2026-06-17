@@ -1,0 +1,40 @@
+<div class="min-h-screen flex items-center justify-center px-4 py-12" style="background: var(--bg)">
+  <div class="w-full max-w-sm">
+    <!-- Brand -->
+    <div class="text-center mb-8">
+      <a routerLink="/" class="text-2xl font-bold tracking-tight text-gray-900">Hop Shop</a>
+      <p class="text-sm text-gray-400 mt-1">Welcome back</p>
+    </div>
+
+    <!-- Card -->
+    <div class="card p-8">
+      <form (ngSubmit)="submit()" class="space-y-5">
+        <div *ngIf="error" class="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-lg">
+          {{ error }}
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-gray-600 mb-1.5" for="email">Email address</label>
+          <input id="email" type="email" name="email" required autocomplete="email"
+                 [(ngModel)]="email" placeholder="you@example.com" class="field-input" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-gray-600 mb-1.5" for="password">Password</label>
+          <input id="password" type="password" name="password" required autocomplete="current-password"
+                 [(ngModel)]="password" placeholder="Your password" class="field-input" />
+        </div>
+
+        <button type="submit" [disabled]="loading" class="btn-primary w-full !py-2.5">
+          <ng-container *ngIf="loading; else btnText">Signing in…</ng-container>
+          <ng-template #btnText>Sign in</ng-template>
+        </button>
+      </form>
+
+      <p class="text-center text-sm text-gray-400 mt-5">
+        Don't have an account? 
+        <a routerLink="/signup" class="text-gray-700 font-medium hover:text-gray-900">Create one</a>
+      </p>
+    </div>
+  </div>
+</div>

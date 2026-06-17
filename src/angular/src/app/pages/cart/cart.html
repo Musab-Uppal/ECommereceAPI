@@ -1,0 +1,78 @@
+<div class="min-h-screen" style="background: var(--bg)">
+  <div class="max-w-5xl mx-auto px-4 md:px-8 py-10">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h1 class="text-2xl font-semibold">Your Cart</h1>
+        <p class="text-sm mt-1" style="color: var(--text-muted)">
+          {{ cart?.items?.length || 0 }} item{{ cart?.items?.length !== 1 ? 's' : '' }}
+        </p>
+      </div>
+      @if ((cart?.items?.length || 0) > 0) {
+        <button (click)="clearCart()" class="text-sm" style="color: var(--text-muted)">
+          Clear all
+        </button>
+      }
+    </div>
+
+    @if (loading) {
+      <div class="text-center py-20 text-gray-400">Loading cart…</div>
+    } @else if (!cart?.items?.length) {
+      <div class="text-center py-24">
+        <div class="text-5xl mb-4">🛒</div>
+        <p class="text-lg font-medium text-gray-900 mb-2">Your cart is empty</p>
+        <p class="text-sm text-gray-400 mb-6">Add some products to get started</p>
+        <a routerLink="/shop" class="btn-primary inline-flex">Browse Shop</a>
+      </div>
+    } @else {
+      <div class="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
+        <!-- Items -->
+        <div class="card divide-y" style="--tw-divide-opacity: 1">
+          @for (item of cart!.items; track item.productId) {
+            <div class="p-5 flex items-center gap-4">
+              <div class="w-16 h-16 rounded-lg bg-gray-100 overflow-hidden flex-shrink-0">
+                <img [src]="'https://picsum.photos/seed/item' + item.productId + '/80/80'"
+                     [alt]="item.name"
+                     class="w-full h-full object-cover" />
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="font-medium text-sm text-gray-900 truncate">{{ item.name || 'Product #' + item.productId }}</p>
+                <p class="text-sm text-gray-400">${{ item.price | number:'1.2-2' }} each</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="flex items-center border rounded-lg overflow-hidden" style="border-color: var(--border-strong)">
+                  <button (click)="update(item, item.quantity - 1)" [disabled]="updatingId === item.productId" class="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-50">−</button>
+                  <span class="w-8 text-center text-sm font-medium">{{ item.quantity }}</span>
+                  <button (click)="update(item, item.quantity + 1)" [disabled]="updatingId === item.productId" class="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-50">+</button>
+                </div>
+                <span class="text-sm font-semibold w-16 text-right">${{ (item.price * item.quantity) | number:'1.2-2' }}</span>
+                <button (click)="remove(item.productId)" [disabled]="updatingId === item.productId" class="w-7 h-7 flex items-center justify-center rounded-md hover:bg-gray-100 text-gray-400 hover:text-red-500 transition-colors">
+                  <svg viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path fill-rule="evenodd" d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.52.149.023a.75.75 0 00.23-1.482A41.03 41.03 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4zM8.58 7.72a.75.75 0 00-1.5.06l.3 7.5a.75.75 0 101.5-.06l-.3-7.5zm4.34.06a.75.75 0 10-1.5-.06l-.3 7.5a.75.75 0 101.5.06l.3-7.5z" clip-rule="evenodd"/></svg>
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Summary -->
+        <div class="card p-6 h-fit space-y-4">
+          <h2 class="font-semibold text-base">Order Summary</h2>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between text-gray-600"><span>Subtotal</span><span>${{ cart!.total | number:'1.2-2' }}</span></div>
+            <div class="flex justify-between text-gray-600"><span>Shipping</span><span class="text-green-600">Free</span></div>
+            <div class="border-t pt-2 flex justify-between font-semibold text-base" style="border-color: var(--border)">
+              <span>Total</span>
+              <span>${{ cart!.total | number:'1.2-2' }}</span>
+            </div>
+          </div>
+          <button (click)="checkout()" [disabled]="checkingOut" class="btn-primary w-full !py-3">
+            @if (checkingOut) { Placing order… } @else { Checkout }
+          </button>
+          <a routerLink="/shop" class="block text-center text-sm text-gray-400 hover:text-gray-700 transition-colors">
+            ← Continue shopping
+          </a>
+        </div>
+      </div>
+    }
+  </div>
+</div>
